@@ -3,13 +3,33 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <link rel="stylesheet" href="/stylesheets/print.css" type="text/css" media="screen" charset="utf-8">
   <link rel="stylesheet" href="/stylesheets/screen.css" type="text/css" media="screen" charset="utf-8">
-  <script type="text/javascript" src="js/websocket-client.js" charset="utf-8"></script>
+<!--  <script type="text/javascript" src="js/websocket-client.js" charset="utf-8"></script>
+-->
 
 
   <title>Cavalier Knight</title>
   
 </head>
 <body>
-hello there
+<h2>Serving some goodness!</h2>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect('http://localhost:8080');
+  socket.on('youAre', function (data) {
+    console.log(data);
+    console.log('You are: ', data.who);
+    if (data.who)
+      document.getElementById('gamer').innerHTML = 'Logged in as: ' + data.who;
+    else
+      document.getElementById('gamer').innerHTML = 'All spots are taken!';
+
+    socket.emit('from_browser', { my: 'should send my name' });
+  });
+  socket.on('endGame', function (data) {
+    console.log(data);
+      document.getElementById('gamer').innerHTML = 'Lost connection: Game ended!';
+  });
+</script>
+<div id='gamer'>Not logged in yet!</div>
 </body>
 </html>

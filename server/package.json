@@ -10,7 +10,8 @@
     "url": "https://github.com/cormac/cavalier-knight"
   },
   "dependencies": {
-    "socket.io": "0.9.11"
+    "socket.io": "0.9.11",
+    "express": "3.0.1"
   },
   "devDependencies": {
   },
