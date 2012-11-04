@@ -2,7 +2,7 @@ var express = require('express'),
     http = require('http'),
     app = express(),
     server = http.createServer(app),
-    io = require('socket.io').listen(server);
+    io = require('socket.io').listen(server, {'log level': 2});
 
 var SERVER_PORT = 8080;
 
@@ -19,10 +19,56 @@ app.configure(function(){
   app.use(express.static(__dirname + '/../public'));
 });
 
+var theCavalier = {
+  free: true
+};
+var theWarriors = [];
+
 io.on('connection', function (client) {
-  client.emit('news', { hello: 'world' });
-  console.log('Message sent from Server to client');
-  client.on('from_browser', function (data) {
-    console.log('From Client: ', data);
-  });
+  if (theCavalier.free){ 
+    console.log('Cavalier is free: ', theCavalier.free);
+    theCavalier = setUpCavalier(client)
+    return;
+  }
+
+  if (theWarriors.length < 3)
+    theWarriors[theWarriors.length] = setUpWarrior(client, theWarriors.length);
+  else
+    allPositionsTaken(client);
 });
+
+function setUpCavalier(client){
+  cavalier = {}
+  cavalier.free = false;
+  client.emit('youAre', {who: 'Cavalier'});
+  client.on('disconnect', function(){
+    cavalier.free = true;
+    // We need another cavalier
+    console.log('The game has to stop now!');
+    client.emit('endGame', {cause: 'disconnect'});
+    client.broadcast.emit('endGame', {cause: 'disconnect'});
+    theCavalier.free = true;
+  });
+
+  return cavalier;
+}
+
+function setUpWarrior(client, warriorPos){
+  var warrior = {};
+  warrior.id = warriorPos + 1;
+  client.emit('youAre', {who: warrior.id});
+  client.on('disconnect', function(){
+    warrior.id = -1;
+    //TODO (Jose) We need to clear the pos in the array
+    console.log('The game has to stop now!'); 
+    client.emit('endGame', {cause: 'disconnect'});
+    client.broadcast.emit('endGame', {cause: 'disconnect'});
+    theWarriors = [];
+  });
+
+  return warrior;
+}
+
+function allPositionsTaken(client){
+  client.emit('youAre', {who: false});
+}
