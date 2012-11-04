@@ -1,18 +1,28 @@
-var fs = require('fs'),
+var express = require('express'),
     http = require('http'),
-    socketio = require('socket.io');
+    app = express(),
+    server = http.createServer(app),
+    io = require('socket.io').listen(server);
 
-var server = http.createServer(function(req, res) {
-  res.writeHead(200, { 'Content-type': 'text/html'});
-  res.end(fs.readFileSync(__dirname + '/../public/index.html'));
-}).listen(8080, function() {
-  console.log('Listening at: http://localhost:8080');
+var SERVER_PORT = 8080;
+
+server.listen(SERVER_PORT, function(){
+  console.log('Server started at %s', (new Date()).toUTCString());
 });
 
-socketio.listen(server).on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  console.log('Message sent');
-  socket.on('from_browser', function (data) {
-    console.log(data);
+app.configure(function(){
+  app.set('views', __dirname + '/../views');
+  app.set('view engine', 'jade');
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(app.router);
+  app.use(express.static(__dirname + '/../public'));
+});
+
+io.on('connection', function (client) {
+  client.emit('news', { hello: 'world' });
+  console.log('Message sent from Server to client');
+  client.on('from_browser', function (data) {
+    console.log('From Client: ', data);
   });
 });
