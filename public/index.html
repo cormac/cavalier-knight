@@ -1,35 +1,28 @@
-<html>
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <link rel="stylesheet" href="/stylesheets/print.css" type="text/css" media="screen" charset="utf-8">
-  <link rel="stylesheet" href="/stylesheets/screen.css" type="text/css" media="screen" charset="utf-8">
-<!--  <script type="text/javascript" src="js/websocket-client.js" charset="utf-8"></script>
--->
-
-
-  <title>Cavalier Knight</title>
-  
-</head>
-<body>
-<h2>Serving some goodness!</h2>
-<script src="/socket.io/socket.io.js"></script>
-<script>
-  var socket = io.connect('http://localhost:8080');
-  socket.on('youAre', function (data) {
-    console.log(data);
-    console.log('You are: ', data.who);
-    if (data.who)
-      document.getElementById('gamer').innerHTML = 'Logged in as: ' + data.who;
-    else
-      document.getElementById('gamer').innerHTML = 'All spots are taken!';
-
-    socket.emit('from_browser', { my: 'should send my name' });
-  });
-  socket.on('endGame', function (data) {
-    console.log(data);
-      document.getElementById('gamer').innerHTML = 'Lost connection: Game ended!';
-  });
-</script>
-<div id='gamer'>Not logged in yet!</div>
-</body>
+<!DOCTYPE html>
+  <head>
+    <link rel="stylesheet" href="css/html5reset-1.6.1.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="css/game.css" type="text/css" media="screen"/>
+    <script src="js/vendor/easeljs-0.5.0.min.js"></script>
+    <script src="js/vendor/EventEmitter-4.0.3.min.js"></script>
+    <script src="js/socketClient.js"></script>
+    <script src="js/easelCode.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/cavalier.js"></script>
+    <script src="js/main.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <!-- TODO (Jose) We need a proper loader for scripts -->
+  <body>
+    <header>
+      <h2>Welcome to Forged Cavalier</h2>
+    </header>
+    <div id="mainContent">
+      <div id='gamer'>Not logged in yet!</div>
+      <div id="forCanvas">
+        <canvas id="gameCanvas" width="500" height="300">
+            Alternate Content
+        </canvas>
+      </div>
+    </div>
+  </body>
 </html>
