@@ -7,7 +7,7 @@ CK.easel = ( function ( document, window, undefined ) {
 
     stage.mouseMoveOutside = true;
     var circle = new createjs.Shape();
-    circle.graphics.beginFill("red").drawCircle(0, 0, 50);
+    circle.graphics.beginFill("blue").drawCircle(0, 0, 50);
     var dragger = new createjs.Container();
     dragger.x = dragger.y = 100;
     dragger.addChild(circle);
