@@ -1,9 +1,10 @@
 //TODO (Jose) This needs to be an object exporting some methods
 CK = CK || {};
-CK.easel = ( function ( document, window, undefined ) {
+CK.easel = ( function ( document, window, undefined ){
   function startPainting(){
     console.log('all ready to paint');
     var stage = new createjs.Stage("gameCanvas");
+
 
     stage.mouseMoveOutside = true;
     var circle = new createjs.Shape();
@@ -23,6 +24,23 @@ CK.easel = ( function ( document, window, undefined ) {
         ev.target.y = ev.stageY+offset.y;
       }
     }
+    
+    // dod created function  12-11-12
+    dragger.movetoken = function(dx,dy) {
+    	this.sx +=dx;
+    	this.sy +=dy;
+    	var i;
+    	var wall; 
+    	for(i=0;i<walls.length;i++) {
+             wall = walls[i];
+    		if (intersect(wall.sx,wall.sy,wall.fx,wall.fy,this.sx,this.sy,this.rad)) {
+    		this.sx -=dx;
+    		this.sy -=dy;
+    		break;
+    		}
+    	}
+    }
+    
     createjs.Ticker.addListener(stage);
     stage.update();
   }

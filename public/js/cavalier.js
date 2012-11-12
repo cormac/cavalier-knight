@@ -17,12 +17,25 @@ CK.cavalier = ( function (window, document, undefined) {
       keyListener,
       cavalierState,
       canvas;
-
+  
+  //dod declared varibles 12-11-12
+	var cwidth = 1280;
+	var cheight = 720;
+	var ctx;
+	var everything = [];
+	var curwall;
+	var wallwidth = 5;
+	var wallstyle = "rgb(200,0,200)";
+	var walls = [];
+	var inmotion = false;
+	var unit = 10;
+  
 
   // constructor for cavalier
   cavalier = function() {
     acceptAttack = true;
     this.addListeners();
+    this.moveit = movetoken;
   }
 
   // implement a keylistener function
@@ -45,7 +58,37 @@ CK.cavalier = ( function (window, document, undefined) {
   // handle the key presses
   // limit the attack to 1 per second
   cavalier.prototype.keyDown = function ( e ) {
-    if ( acceptAttack === true ) {
+	  var keyCode; 
+	  if(e == null)
+	  {
+	    keyCode = window.event.keyCode; 
+		window.event.preventDefault();
+	  }
+	  else 
+	  {
+	    keyCode = event.keyCode; 
+		event.preventDefault();
+	  }
+	  
+	  switch(keyCode)
+	  {
+	      case 37:  //left arrow
+	    	  mypent.moveit(-unit,0);
+	    	  break; 
+	      case 38:  //up arrow
+	    	  mypent.moveit(0,-unit);
+	    	  break; 
+	      case 39: //right arrow
+	    	  mypent.moveit(unit,0);
+	    	  break; 
+	      case 40:  //down arrow
+	    	  mypent.moveit(0,unit);
+	    	  break; 
+	      default:
+	    	  window.removeEventListener('keydown',getkeyAndMove,false);
+	 	 }
+	  
+	  if ( acceptAttack === true ) {
       if ( e.keyCode === 65 )
         this.triggerAttack('shield attack');
       if ( e.keyCode === 83 )
